@@ -45,6 +45,7 @@ if __name__ == '__main__':
             x = torch.relu(self.fc2(x))
             x = self.fc3(x)
             return x
+    #testing changes
     '''
     net = Net()
 
