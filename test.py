@@ -6,7 +6,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 if __name__ == '__main__':
-
+    ''''
     # 1. Prepare the dataset
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -22,6 +22,7 @@ if __name__ == '__main__':
                                            download=True, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=4,
                                              shuffle=False, num_workers=2)
+    '''
 
     classes = ('plane', 'car', 'bird', 'cat',
                'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
@@ -45,8 +46,8 @@ if __name__ == '__main__':
             x = torch.relu(self.fc2(x))
             x = self.fc3(x)
             return x
-    #testing changes
     '''
+    #testing changes
     net = Net()
 
     # 3. Define the loss function and optimizer
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     # 4. Training loop
-    for epoch in range(11):  # loop over the dataset multiple times
+    for epoch in range(20):  # loop over the dataset multiple times
 
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -90,21 +91,25 @@ if __name__ == '__main__':
         100 * correct / total))
     
     torch.save(net.state_dict(), 'model.pth')
-    '''
+'''
+    
     net = Net()
     # Load the saved model
     net.load_state_dict(torch.load('model.pth'))
     net.eval()
 
+    input_size = next(net.parameters()).shape[1:]
+    print(next(net.parameters()).shape[1:], 'param')
+
     # Define the transformations for preprocessing the image
     transform = transforms.Compose([
-        transforms.Resize((32, 32)),  # Resize the image to match the input size of the model
+        transforms.Resize((input_size[1:])),  # Resize the image to match the input size of the model
         transforms.ToTensor(),         # Convert the image to a tensor
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))  # Normalize the image
     ])
 
     # Load the image
-    image_path = 'froggy.jpg'  # Provide the path to your image
+    image_path = 'boat.jpg'  # Provide the path to your image
     image = Image.open(image_path)
 
     # Preprocess the image
@@ -113,10 +118,10 @@ if __name__ == '__main__':
     # Perform inference
     with torch.no_grad():
         outputs = net(input_image)
+        print(outputs)
 
     # Interpret the predictions
     _, predicted = torch.max(outputs, 1)
-    print(predicted.item())
     predicted_class = classes[predicted.item()]
 
     # Get the prediction confidence (probability) for the predicted class
@@ -128,4 +133,3 @@ if __name__ == '__main__':
     print("Prediction confidence: {:.2f}%".format(prediction_confidence))
 
     print('Predicted class:', predicted_class)
-    
